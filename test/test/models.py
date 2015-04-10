@@ -17,6 +17,7 @@ from sqlalchemy.orm import (
     scoped_session,
     sessionmaker,
     relationship,
+    backref,
     )
 
 from zope.sqlalchemy import ZopeTransactionExtension
@@ -63,10 +64,10 @@ class Customers(Base, MyMixin):
     __tablename__ = 'customers'
     id = Column(Integer, primary_key=True)
 
-    name = Column(Unicode)
-    description = Column(Unicode)
+    name = Column(Unicode(256))
+    description = Column(Unicode(256))
 
-    accounts = relationship('Accounts', backref='customer')
+    accounts = relationship('Accounts', lazy='joined', backref='customer')
 
 class Accounts(Base, MyMixin):
 
@@ -74,8 +75,9 @@ class Accounts(Base, MyMixin):
     id = Column(Integer, primary_key=True)
 
     customer_id = Column(Integer, ForeignKey('customers.id'))
+    #customer = relationship('Customers', lazy='subquery', backref='accounts')
 
-    name = Column(Unicode)
-    description = Column(Unicode)
+    name = Column(Unicode(256))
+    description = Column(Unicode(256))
 
 
